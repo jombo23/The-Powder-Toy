@@ -1,6 +1,6 @@
 #include "ToolClasses.h"
 #include "simulation/Air.h"
-//#TPT-Directive ToolClass Tool_Air2 TOOL_AIR2 9
+//#TPT-Directive ToolClass Tool_Cycl TOOL_AIR2 8
 Tool_Cycl::Tool_Cycl()
 {
 	Identifier = "DEFAULT_TOOL_CYCL";
@@ -36,6 +36,28 @@ int Tool_Cycl::Perform(Simulation * sim, Particle * cpart, int x, int y, int bru
 	sim->air->vx[y / CELL][x / CELL] -= (strength / 256) * (cos(1.57f + (atan2(brushY - y, brushX - x))));
 
 #endif /* CELL == 4*/
+
+	// Clamp velocities
+
+	if (sim->air->vx[y / CELL][x / CELL] > 256.0f)
+	{
+		sim->air->vx[y / CELL][x / CELL] = 256.0f;
+	}
+	if (sim->air->vy[y / CELL][x / CELL] > 256.0f)
+	{
+		sim->air->vy[y / CELL][x / CELL] = 256.0f;
+	}
+
+	if (sim->air->vx[y / CELL][x / CELL] < -256.0f)
+	{
+		sim->air->vx[y / CELL][x / CELL] = -256.0f;
+	}
+	if (sim->air->vy[y / CELL][x / CELL] < -256.0f)
+	{
+		sim->air->vy[y / CELL][x / CELL] = -256.0f;
+	}
+
+
 	return 1;
 }
 
